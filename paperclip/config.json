@@ -21,12 +21,10 @@
   "privileged": [],
   "apparmor": "default",
   "discovery": [],
-  "webui": "http://[HOST]:[PORT:3100]",
   "ingress": true,
-  "ingress_port": 3100,
   "panel_icon": "mdi:robot-outline",
   "map": ["share:rw"],
-  "services": ["mysql:want", "postgresql:want"],
+  "services": ["mysql:want",
   "options": {
     "log_level": "info",
     "database": {
