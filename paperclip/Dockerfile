@@ -45,8 +45,8 @@ RUN corepack enable && \
 # Layer 3: User and Directory Setup
 # ============================================================================
 RUN useradd -m -s /bin/bash paperclip && \
-    mkdir -p /paperclip /share/paperclip && \
-    chown -R paperclip:paperclip /paperclip /share/paperclip
+    mkdir -p /app /paperclip /share/paperclip && \
+    chown -R paperclip:paperclip /app /paperclip /share/paperclip
 
 # ============================================================================
 # Layer 4: Paperclip Build
