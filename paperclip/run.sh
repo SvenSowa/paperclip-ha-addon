@@ -87,14 +87,13 @@ fi
 # ----------------------------------------------------------------------------
 # Phase 4: Optional settings
 # ----------------------------------------------------------------------------
-# Deployment mode / exposure (override the image defaults from config).
-# - local_trusted : no app login; trusts the local network (rely on HA ingress).
-# - authenticated : Paperclip enforces its own login (private or public exposure).
-DEPLOYMENT_MODE="$(bashio::config 'deployment.mode')"
+# Deployment exposure (private | public). The deployment MODE is fixed to
+# "authenticated" (set in the Dockerfile): the only viable mode for an HA
+# add-on. "local_trusted" is intentionally not offered because it forces
+# loopback-only binding (server.bind=loopback), which makes the add-on
+# unreachable through HA ingress and the LAN (both connect via the container
+# IP, not loopback).
 DEPLOYMENT_EXPOSURE="$(bashio::config 'deployment.exposure')"
-if ! bashio::var.is_empty "${DEPLOYMENT_MODE}"; then
-    export PAPERCLIP_DEPLOYMENT_MODE="${DEPLOYMENT_MODE}"
-fi
 if ! bashio::var.is_empty "${DEPLOYMENT_EXPOSURE}"; then
     export PAPERCLIP_DEPLOYMENT_EXPOSURE="${DEPLOYMENT_EXPOSURE}"
 fi

@@ -1,6 +1,6 @@
 {
   "name": "Paperclip AI",
-  "version": "2.0.1",
+  "version": "2.0.3",
   "slug": "paperclip",
   "description": "Multi-Agent Orchestration Platform for AI Agents",
   "url": "https://github.com/SvenSowa/paperclip-ha-addon",
@@ -12,7 +12,7 @@
   "ingress_port": 3100,
   "panel_icon": "mdi:robot-outline",
   "ports": {
-    "3100/tcp": null
+    "3100/tcp": 3100
   },
   "ports_description": {
     "3100/tcp": "Paperclip Web UI & API (optional direct access)"
@@ -23,7 +23,6 @@
       "type": "embedded"
     },
     "deployment": {
-      "mode": "authenticated",
       "exposure": "private"
     },
     "backup": {
@@ -47,7 +46,6 @@
       "postgres_database": "str?"
     },
     "deployment": {
-      "mode": "list(local_trusted|authenticated)",
       "exposure": "list(private|public)"
     },
     "backup": {

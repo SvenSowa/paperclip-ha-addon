@@ -11,7 +11,7 @@ LABEL \
     io.hass.name="Paperclip AI" \
     io.hass.description="Multi-Agent Orchestration Platform" \
     io.hass.type="addon" \
-    io.hass.version="2.0.1" \
+    io.hass.version="2.0.3" \
     io.hass.arch="aarch64|amd64" \
     maintainer="GaRoN <garon@example.com>"
 
