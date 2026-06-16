@@ -33,7 +33,7 @@ A complete Home Assistant add-on for [Paperclip AI](https://github.com/paperclip
 1. Open Home Assistant
 2. Go to **Settings** → **Add-ons** → **Add-on Store**
 3. Click the three dots menu → **Add repository**
-4. Enter: `https://github.com/chillkiller/paperclip-ha-addon`
+4. Enter: `https://github.com/SvenSowa/paperclip-ha-addon`
 5. Click **Add**
 
 ### Step 2: Install Add-on
@@ -147,7 +147,7 @@ paperclip-ha-addon/
 ├── SECURITY.md                  # Security policy
 ├── CONTRIBUTING.md              # Contribution guidelines
 ├── CODE_OF_CONDUCT.md           # Code of conduct
-└── paperclip_ha_addon/          # Add-on directory
+└── paperclip/                   # Add-on directory
     ├── config.json              # Add-on manifest
     ├── build.json               # Build configuration
     ├── Dockerfile               # Container definition
