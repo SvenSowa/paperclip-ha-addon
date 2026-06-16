@@ -24,7 +24,7 @@
   "ingress": true,
   "panel_icon": "mdi:robot-outline",
   "map": ["share:rw"],
-  "services": ["mysql:want",
+  "services": ["mysql:want]",
   "options": {
     "log_level": "info",
     "database": {
