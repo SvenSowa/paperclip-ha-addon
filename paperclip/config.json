@@ -8,19 +8,12 @@
   "startup": "application",
   "boot": "auto",
   "init": false,
-  "full_access": false,
-  "host_network": false,
-  "host_pulseaudio": false,
-  "host_dbus": false,
   "ports": {
     "3100/tcp": 3100
   },
   "ports_description": {
     "3100/tcp": "Paperclip Web UI & API"
   },
-  "privileged": [],
-  "apparmor": "default",
-  "discovery": [],
   "ingress": true,
   "panel_icon": "mdi:robot-outline",
   "map": ["share:rw"],
