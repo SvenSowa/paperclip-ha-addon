@@ -87,11 +87,63 @@ fi
 # ----------------------------------------------------------------------------
 # Phase 4: Optional settings
 # ----------------------------------------------------------------------------
+# Deployment mode / exposure (override the image defaults from config).
+# - local_trusted : no app login; trusts the local network (rely on HA ingress).
+# - authenticated : Paperclip enforces its own login (private or public exposure).
+DEPLOYMENT_MODE="$(bashio::config 'deployment.mode')"
+DEPLOYMENT_EXPOSURE="$(bashio::config 'deployment.exposure')"
+if ! bashio::var.is_empty "${DEPLOYMENT_MODE}"; then
+    export PAPERCLIP_DEPLOYMENT_MODE="${DEPLOYMENT_MODE}"
+fi
+if ! bashio::var.is_empty "${DEPLOYMENT_EXPOSURE}"; then
+    export PAPERCLIP_DEPLOYMENT_EXPOSURE="${DEPLOYMENT_EXPOSURE}"
+fi
+bashio::log.info "Deployment: ${PAPERCLIP_DEPLOYMENT_MODE} / ${PAPERCLIP_DEPLOYMENT_EXPOSURE}"
+
+# Automatic database backups (verified upstream PAPERCLIP_DB_BACKUP_* env vars).
+if [ "$(bashio::config 'backup.enabled')" = "true" ]; then
+    export PAPERCLIP_DB_BACKUP_ENABLED="true"
+    export PAPERCLIP_DB_BACKUP_RETENTION_DAYS="$(bashio::config 'backup.retention_days')"
+    export PAPERCLIP_DB_BACKUP_INTERVAL_MINUTES="$(bashio::config 'backup.interval_minutes')"
+
+    # Custom backup directory (optional). Default lives under PAPERCLIP_HOME
+    # (/data), which already persists, so leave unset to use the app default.
+    BACKUP_PATH="$(bashio::config 'backup.path')"
+    if ! bashio::var.is_empty "${BACKUP_PATH}"; then
+        export PAPERCLIP_DB_BACKUP_DIR="${BACKUP_PATH}"
+        mkdir -p "${BACKUP_PATH}"
+    fi
+    bashio::log.info "DB backups enabled: retention=$(bashio::config 'backup.retention_days')d, interval=$(bashio::config 'backup.interval_minutes')m"
+else
+    export PAPERCLIP_DB_BACKUP_ENABLED="false"
+    bashio::log.info "DB backups disabled"
+fi
+
 # Public URL (useful when accessed through a reverse proxy / external hostname).
 PUBLIC_URL="$(bashio::config 'public_url')"
 if ! bashio::var.is_empty "${PUBLIC_URL}"; then
     export PAPERCLIP_PUBLIC_URL="${PUBLIC_URL}"
     bashio::log.info "Public URL: ${PUBLIC_URL}"
+fi
+
+# Allowed hostnames for authenticated/private mode. In this mode Paperclip
+# rejects any request whose Host header is not loopback or explicitly allowed.
+# Because the add-on binds 0.0.0.0 and is typically reached via the Home
+# Assistant host's LAN IP/hostname (or the ingress proxy), those hosts must be
+# allowlisted here, otherwise access fails with a "hostname not allowed" error.
+ALLOWED_HOSTNAMES=""
+for host in $(bashio::config 'allowed_hostnames'); do
+    if [ -z "${ALLOWED_HOSTNAMES}" ]; then
+        ALLOWED_HOSTNAMES="${host}"
+    else
+        ALLOWED_HOSTNAMES="${ALLOWED_HOSTNAMES},${host}"
+    fi
+done
+if ! bashio::var.is_empty "${ALLOWED_HOSTNAMES}"; then
+    export PAPERCLIP_ALLOWED_HOSTNAMES="${ALLOWED_HOSTNAMES}"
+    bashio::log.info "Allowed hostnames: ${ALLOWED_HOSTNAMES}"
+else
+    bashio::log.warning "No allowed_hostnames configured. Access via a LAN IP/hostname will be rejected in authenticated/private mode (loopback only)."
 fi
 
 # Telemetry opt-out (verified upstream env vars).

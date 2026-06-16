@@ -1,5 +1,8 @@
-ARG BUILD_FROM
-FROM ${BUILD_FROM}
+# Supervisor injects BUILD_ARCH (aarch64/amd64); select the matching
+# Home Assistant Debian base image. BUILD_FROM is no longer provided by the
+# Supervisor (>= 2026.04.0), so the base image is pinned here directly.
+ARG BUILD_ARCH=amd64
+FROM ghcr.io/home-assistant/${BUILD_ARCH}-base-debian:trixie
 
 # ============================================================================
 # Metadata
@@ -8,7 +11,8 @@ LABEL \
     io.hass.name="Paperclip AI" \
     io.hass.description="Multi-Agent Orchestration Platform" \
     io.hass.type="addon" \
-    io.hass.version="1.0.0" \
+    io.hass.version="2.0.1" \
+    io.hass.arch="aarch64|amd64" \
     maintainer="GaRoN <garon@example.com>"
 
 # ============================================================================

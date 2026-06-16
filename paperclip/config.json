@@ -1,6 +1,6 @@
 {
   "name": "Paperclip AI",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "slug": "paperclip",
   "description": "Multi-Agent Orchestration Platform for AI Agents",
   "url": "https://github.com/SvenSowa/paperclip-ha-addon",
@@ -22,7 +22,18 @@
     "database": {
       "type": "embedded"
     },
+    "deployment": {
+      "mode": "authenticated",
+      "exposure": "private"
+    },
+    "backup": {
+      "enabled": true,
+      "retention_days": 30,
+      "interval_minutes": 60,
+      "path": ""
+    },
     "public_url": "",
+    "allowed_hostnames": [],
     "disable_telemetry": true
   },
   "schema": {
@@ -35,7 +46,18 @@
       "postgres_password": "password?",
       "postgres_database": "str?"
     },
+    "deployment": {
+      "mode": "list(local_trusted|authenticated)",
+      "exposure": "list(private|public)"
+    },
+    "backup": {
+      "enabled": "bool",
+      "retention_days": "int",
+      "interval_minutes": "int",
+      "path": "str?"
+    },
     "public_url": "str?",
+    "allowed_hostnames": ["str"],
     "disable_telemetry": "bool"
   }
 }
