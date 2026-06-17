@@ -190,20 +190,19 @@ if [ "$(bashio::config 'azure_foundry.enabled')" = "true" ]; then
             bashio::log.warning "Failed to register Azure AI Foundry adapter in ${ADAPTER_STORE_FILE}"
         fi
 
-        # Optional connection defaults read from env by the adapter. Per-agent
-        # adapterConfig in the Paperclip UI overrides these.
+        # Optional connection defaults read from env by the adapter. These are
+        # server-level credentials the live-deployment discovery hook needs (it
+        # has no per-agent config to read). The deployment itself is chosen
+        # per-agent from the live dropdown in the Paperclip UI, so it is not an
+        # env default here.
         AZ_ENDPOINT="$(bashio::config 'azure_foundry.endpoint')"
         AZ_API_KEY="$(bashio::config 'azure_foundry.api_key')"
-        AZ_DEPLOYMENT="$(bashio::config 'azure_foundry.deployment')"
         if ! bashio::var.is_empty "${AZ_ENDPOINT}"; then
             export AZURE_FOUNDRY_ENDPOINT="${AZ_ENDPOINT}"
             bashio::log.info "Azure AI Foundry endpoint: ${AZ_ENDPOINT}"
         fi
         if ! bashio::var.is_empty "${AZ_API_KEY}"; then
             export AZURE_FOUNDRY_API_KEY="${AZ_API_KEY}"
-        fi
-        if ! bashio::var.is_empty "${AZ_DEPLOYMENT}"; then
-            export AZURE_FOUNDRY_DEPLOYMENT="${AZ_DEPLOYMENT}"
         fi
     else
         bashio::log.warning "Azure AI Foundry adapter enabled but build is missing at ${AZURE_FOUNDRY_ADAPTER_DIR}"

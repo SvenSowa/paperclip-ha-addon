@@ -1,6 +1,6 @@
 {
   "name": "Paperclip AI",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "slug": "paperclip",
   "description": "Multi-Agent Orchestration Platform for AI Agents",
   "url": "https://github.com/SvenSowa/paperclip-ha-addon",
@@ -37,8 +37,7 @@
     "azure_foundry": {
       "enabled": false,
       "endpoint": "",
-      "api_key": "",
-      "deployment": ""
+      "api_key": ""
     }
   },
   "schema": {
@@ -66,8 +65,7 @@
     "azure_foundry": {
       "enabled": "bool",
       "endpoint": "str?",
-      "api_key": "password?",
-      "deployment": "str?"
+      "api_key": "password?"
     }
   }
 }

@@ -5,6 +5,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.2] - 2026-06-17
+
+### Changed
+- Bumped the bundled Azure AI Foundry adapter to `v0.3.1`
+  (`AZURE_FOUNDRY_ADAPTER_REF` / `AZURE_FOUNDRY_ADAPTER_VERSION`).
+
+### Removed
+- The redundant `azure_foundry.deployment` option. The deployment is now
+  selected per-agent from the live dropdown in the Paperclip UI, which is
+  populated from the resource's real Azure deployments. `endpoint` and
+  `api_key` remain (they feed the adapter's live-deployment discovery hook).
+
+### Fixed
+- Deployment picker now lists only the resource's real Azure deployments;
+  the static `gpt-5-*` suggestion list is used only as a fallback when no
+  Foundry credentials are configured yet.
+
+## [2.1.1] - 2026-06-17
+
+### Fixed
+- Build-time assertion that the cloned Azure AI Foundry adapter tag matches the
+  expected version, busting stale Docker cache layers that pinned an old adapter
+  build.
+
 ## [2.1.0] - 2026-06-17
 
 ### Added
