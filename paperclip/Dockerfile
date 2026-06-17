@@ -94,10 +94,9 @@ RUN npm install --global --omit=dev \
 # so the server's dynamic import resolves dependencies without relying on the
 # Paperclip workspace layout. run.sh registers it in the adapter-plugins store
 # at startup via a localPath record.
-ARG AZURE_FOUNDRY_ADAPTER_REF=27cb191eef248ca4a4a91ffd9d337d4786361d4e
-RUN git clone https://github.com/claudiosanchez/azure-foundry-adapter.git /opt/azure-foundry-adapter && \
+ARG AZURE_FOUNDRY_ADAPTER_REF=v0.3.0
+RUN git clone --depth 1 --branch ${AZURE_FOUNDRY_ADAPTER_REF} https://github.com/SvenSowa/azure-foundry-adapter.git /opt/azure-foundry-adapter && \
     cd /opt/azure-foundry-adapter && \
-    git checkout ${AZURE_FOUNDRY_ADAPTER_REF} && \
     npm install && \
     npm run build && \
     test -f dist/index.js || (echo "ERROR: azure-foundry-adapter build output missing" && exit 1) && \
