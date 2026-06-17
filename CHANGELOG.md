@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.3] - 2026-06-17
+
+### Changed
+- Bumped the bundled Azure AI Foundry adapter to `v0.3.2`
+  (`AZURE_FOUNDRY_ADAPTER_REF` / `AZURE_FOUNDRY_ADAPTER_VERSION`).
+
+### Fixed
+- The deployment selected in Paperclip's native **Model** dropdown is now
+  actually used by the adapter's environment test and runs. Paperclip writes
+  the model selection to `config.model`; the adapter now reads the Azure
+  deployment from `config.model` (with `config.deployment` kept for
+  back-compat), resolving the "Deployment not set" warning even after picking
+  one.
+- Removed the adapter's redundant custom **Deployment** combobox; the standard
+  Model dropdown (populated with live Azure deployments) is the single source.
+
 ## [2.1.2] - 2026-06-17
 
 ### Changed

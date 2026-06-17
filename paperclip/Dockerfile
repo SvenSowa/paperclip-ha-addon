@@ -11,7 +11,7 @@ LABEL \
     io.hass.name="Paperclip AI" \
     io.hass.description="Multi-Agent Orchestration Platform" \
     io.hass.type="addon" \
-    io.hass.version="2.1.2" \
+    io.hass.version="2.1.3" \
     io.hass.arch="aarch64|amd64" \
     maintainer="GaRoN <garon@example.com>"
 
@@ -102,8 +102,8 @@ RUN npm install --global --omit=dev \
 # a stale clone would surface as the wrong version in the UI). Bumping this ARG
 # together with AZURE_FOUNDRY_ADAPTER_REF also changes the RUN cache key, forcing
 # a fresh clone on the next build.
-ARG AZURE_FOUNDRY_ADAPTER_REF=v0.3.1
-ARG AZURE_FOUNDRY_ADAPTER_VERSION=0.3.1
+ARG AZURE_FOUNDRY_ADAPTER_REF=v0.3.2
+ARG AZURE_FOUNDRY_ADAPTER_VERSION=0.3.2
 RUN git clone --depth 1 --branch ${AZURE_FOUNDRY_ADAPTER_REF} https://github.com/SvenSowa/azure-foundry-adapter.git /opt/azure-foundry-adapter && \
     cd /opt/azure-foundry-adapter && \
     ACTUAL_VERSION="$(jq -r '.version' package.json)" && \
