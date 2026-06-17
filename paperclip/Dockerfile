@@ -11,7 +11,7 @@ LABEL \
     io.hass.name="Paperclip AI" \
     io.hass.description="Multi-Agent Orchestration Platform" \
     io.hass.type="addon" \
-    io.hass.version="2.0.3" \
+    io.hass.version="2.1.0" \
     io.hass.arch="aarch64|amd64" \
     maintainer="GaRoN <garon@example.com>"
 
@@ -86,7 +86,26 @@ RUN npm install --global --omit=dev \
     opencode-ai
 
 # ============================================================================
-# Layer 7: Entrypoint Script
+# Layer 7: Azure AI Foundry Adapter (external Paperclip adapter)
+# ============================================================================
+# Build the Azure AI Foundry adapter as a self-contained package under /opt so
+# Paperclip can load it as an external adapter (adapterType "azure_foundry").
+# It is installed with its own node_modules (including @paperclipai/adapter-utils)
+# so the server's dynamic import resolves dependencies without relying on the
+# Paperclip workspace layout. run.sh registers it in the adapter-plugins store
+# at startup via a localPath record.
+ARG AZURE_FOUNDRY_ADAPTER_REF=27cb191eef248ca4a4a91ffd9d337d4786361d4e
+RUN git clone https://github.com/claudiosanchez/azure-foundry-adapter.git /opt/azure-foundry-adapter && \
+    cd /opt/azure-foundry-adapter && \
+    git checkout ${AZURE_FOUNDRY_ADAPTER_REF} && \
+    npm install && \
+    npm run build && \
+    test -f dist/index.js || (echo "ERROR: azure-foundry-adapter build output missing" && exit 1) && \
+    npm prune --omit=dev && \
+    rm -rf .git
+
+# ============================================================================
+# Layer 8: Entrypoint Script
 # ============================================================================
 COPY run.sh /usr/local/bin/run.sh
 RUN chmod +x /usr/local/bin/run.sh

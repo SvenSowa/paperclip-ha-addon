@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.0] - 2026-06-17
+
+### Added
+- Azure AI Foundry external adapter (`adapterType: azure_foundry`), baked into
+  the image at `/opt/azure-foundry-adapter` and registered with Paperclip's
+  adapter-plugin store at startup via a local-path record.
+- New `azure_foundry` configuration group: `enabled` toggle plus optional
+  `endpoint`, `api_key`, and `deployment` connection defaults (exported as
+  `AZURE_FOUNDRY_ENDPOINT` / `AZURE_FOUNDRY_API_KEY` / `AZURE_FOUNDRY_DEPLOYMENT`).
+  Per-agent `adapterConfig` in the Paperclip UI overrides these.
+
 ## [1.0.0] - 2026-04-21
 
 ### Added
