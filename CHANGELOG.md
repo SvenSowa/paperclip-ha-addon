@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.6] - 2026-06-17
+
+### Changed
+- Bumped the bundled Azure AI Foundry adapter to `v0.3.5`.
+
+### Added
+- Adapter now honors Azure's `retry-after-ms` header (millisecond precision) in
+  addition to `retry-after` (seconds) when backing off from a 429, and logs the
+  `x-ratelimit-remaining-tokens` / `x-ratelimit-remaining-requests` headers
+  alongside each 429 back-off for easier rate-limit diagnosis.
+
 ## [2.1.5] - 2026-06-17
 
 ### Changed
