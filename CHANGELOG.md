@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.4] - 2026-06-17
+
+### Changed
+- Bumped the bundled Azure AI Foundry adapter to `v0.3.3`.
+
+### Fixed
+- Runs no longer fail with "Failed to parse URL from
+  /openai/v1/chat/completions". The execute paths now fall back to the
+  `AZURE_FOUNDRY_ENDPOINT` env var (set from the addon's `azure_foundry.endpoint`
+  config) at request time, matching the Test button's behaviour — previously the
+  endpoint was only resolved during validation, so runs that relied on the
+  addon-level endpoint produced a relative URL.
+- The "Foundry run" log now reports the actual resolved deployment
+  (`config.model`) instead of always showing `(default)`.
+
 ## [2.1.3] - 2026-06-17
 
 ### Changed
