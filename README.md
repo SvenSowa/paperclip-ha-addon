@@ -233,6 +233,31 @@ The entrypoint script is divided into 7 phases:
 - Check PostgreSQL logs
 - Test connection with `psql`
 
+### Azure AI Foundry — HTTP 429 "Too Many Requests"
+
+If agent runs log `Foundry 429 (rate limited)` or fail with an Azure rate-limit
+message, the deployment's **rate limit (Tokens-Per-Minute / TPM)** is being hit.
+The adapter already retries with backoff (honoring Azure's `retry-after-ms` /
+`retry-after` headers and logging `remaining-tokens` / `remaining-requests`), so
+transient bursts usually recover on their own. To reduce or eliminate 429s:
+
+1. **Raise the deployment's TPM rate limit** — Azure AI Foundry → Deployments →
+   select the deployment → Edit → increase *Tokens per Minute Rate Limit*.
+   Request a quota increase if you're at the per-region/per-model cap, move quota
+   from another deployment, or add a deployment in another region.
+2. **Keep the agent's max output tokens modest** — Azure estimates each request's
+   TPM cost *before* running it as `prompt tokens + max_tokens (+ best_of)`. A
+   large max-output-tokens value reserves TPM headroom you don't actually use and
+   triggers 429s earlier, even when the real response is small.
+3. **Avoid sharp bursts** — Azure enforces the limit on a short (~1-second) slice,
+   not a smooth per-minute bucket, so several runs fired in rapid succession can
+   429 even at low average usage. Spread the load / lower agent concurrency and
+   ramp workload up gradually.
+
+> A 429 is a deployment **quota/throughput** condition, not an add-on
+> mis-configuration. Higher-tier SKUs (Global/DataZone Standard) have higher
+> default limits, and Provisioned Throughput (PTU) gives guaranteed capacity.
+
 ## 🔄 Updates
 
 The add-on updates automatically when a new version is available. Paperclip itself is updated through the build process.
