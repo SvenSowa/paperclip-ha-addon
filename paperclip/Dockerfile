@@ -11,7 +11,7 @@ LABEL \
     io.hass.name="Paperclip AI" \
     io.hass.description="Multi-Agent Orchestration Platform" \
     io.hass.type="addon" \
-    io.hass.version="2.1.0" \
+    io.hass.version="2.1.1" \
     io.hass.arch="aarch64|amd64" \
     maintainer="GaRoN <garon@example.com>"
 
@@ -94,9 +94,22 @@ RUN npm install --global --omit=dev \
 # so the server's dynamic import resolves dependencies without relying on the
 # Paperclip workspace layout. run.sh registers it in the adapter-plugins store
 # at startup via a localPath record.
+#
+# AZURE_FOUNDRY_ADAPTER_VERSION pins the version we EXPECT the cloned tag to
+# contain. The build fails loudly if the on-disk package.json does not match.
+# This guards against a stale Docker cache or a moved git tag silently shipping
+# an older adapter (Paperclip reads the version live from this package.json, so
+# a stale clone would surface as the wrong version in the UI). Bumping this ARG
+# together with AZURE_FOUNDRY_ADAPTER_REF also changes the RUN cache key, forcing
+# a fresh clone on the next build.
 ARG AZURE_FOUNDRY_ADAPTER_REF=v0.3.0
+ARG AZURE_FOUNDRY_ADAPTER_VERSION=0.3.0
 RUN git clone --depth 1 --branch ${AZURE_FOUNDRY_ADAPTER_REF} https://github.com/SvenSowa/azure-foundry-adapter.git /opt/azure-foundry-adapter && \
     cd /opt/azure-foundry-adapter && \
+    ACTUAL_VERSION="$(jq -r '.version' package.json)" && \
+    if [ "${ACTUAL_VERSION}" != "${AZURE_FOUNDRY_ADAPTER_VERSION}" ]; then \
+        echo "ERROR: azure-foundry-adapter version mismatch: cloned ${AZURE_FOUNDRY_ADAPTER_REF} contains ${ACTUAL_VERSION}, expected ${AZURE_FOUNDRY_ADAPTER_VERSION}" && exit 1; \
+    fi && \
     npm install && \
     npm run build && \
     test -f dist/index.js || (echo "ERROR: azure-foundry-adapter build output missing" && exit 1) && \
