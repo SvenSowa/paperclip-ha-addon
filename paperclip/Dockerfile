@@ -11,7 +11,7 @@ LABEL \
     io.hass.name="Paperclip AI" \
     io.hass.description="Multi-Agent Orchestration Platform" \
     io.hass.type="addon" \
-    io.hass.version="2.1.4" \
+    io.hass.version="2.1.5" \
     io.hass.arch="aarch64|amd64" \
     maintainer="GaRoN <garon@example.com>"
 
@@ -102,8 +102,13 @@ RUN npm install --global --omit=dev \
 # a stale clone would surface as the wrong version in the UI). Bumping this ARG
 # together with AZURE_FOUNDRY_ADAPTER_REF also changes the RUN cache key, forcing
 # a fresh clone on the next build.
-ARG AZURE_FOUNDRY_ADAPTER_REF=v0.3.3
-ARG AZURE_FOUNDRY_ADAPTER_VERSION=0.3.3
+ARG AZURE_FOUNDRY_ADAPTER_REF=v0.3.4
+ARG AZURE_FOUNDRY_ADAPTER_VERSION=0.3.4
+# Cache-bust: fetch the tag's live commit metadata BEFORE cloning. Docker keys
+# this ADD layer on the response content, so if the tag is moved/updated to a new
+# commit the clone layer is invalidated on the FIRST rebuild (no second rebuild
+# needed). For a brand-new tag the ARG above already changes the cache key.
+ADD https://api.github.com/repos/SvenSowa/azure-foundry-adapter/git/refs/tags/${AZURE_FOUNDRY_ADAPTER_REF} /tmp/af-adapter-ref.json
 RUN git clone --depth 1 --branch ${AZURE_FOUNDRY_ADAPTER_REF} https://github.com/SvenSowa/azure-foundry-adapter.git /opt/azure-foundry-adapter && \
     cd /opt/azure-foundry-adapter && \
     ACTUAL_VERSION="$(jq -r '.version' package.json)" && \

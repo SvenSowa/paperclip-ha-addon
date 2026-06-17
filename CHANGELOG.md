@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.5] - 2026-06-17
+
+### Changed
+- Bumped the bundled Azure AI Foundry adapter to `v0.3.4`.
+
+### Fixed
+- Adapter now handles Azure rate limiting (HTTP 429) gracefully: the retry
+  back-off is abort-aware (a run timeout or cancel no longer waits out a long
+  `Retry-After` before failing), the back-off is capped at 30s, and exhausted
+  retries / aborts now produce a clear message ("Azure rate limit (HTTP 429) …
+  raise the deployment's Tokens-Per-Minute quota") instead of the bare
+  "This operation was aborted".
+- The Foundry adapter now updates on the **first** rebuild. A cache-bust step
+  fetches the adapter tag's live commit metadata before cloning, so a
+  moved/updated tag invalidates the Docker clone layer immediately (previously a
+  second rebuild was sometimes needed to pick up adapter changes).
+
 ## [2.1.4] - 2026-06-17
 
 ### Changed
